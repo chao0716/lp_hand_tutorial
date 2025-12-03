@@ -1,0 +1,89 @@
+<mujoco model="onshape">
+  <default>
+    <default class="robot">
+      <default class="motor">
+        <joint />
+        <motor />
+      </default>
+      <default class="visual">
+        <geom material="visualgeom" contype="0" conaffinity="0" group="2" />
+      </default>
+      <default class="collision">
+        <geom material="collision_material" condim="3" contype="0" conaffinity="1" priority="1" group="1" solref="0.005 1" solimp="0.99 0.999 1e-05" friction="1 0.01 0.01" />
+      </default>
+    </default>
+  </default>
+
+  <compiler angle="radian" />
+
+  <asset>
+    <material name="base_link_material" rgba="0.60392156862745094426 0.14901960784313725283 0.14901960784313725283 1.0" />
+    <material name="mcp_joint_material" rgba="0.86666666666666669627 0.86666666666666669627 0.050980392156862744391 1.0" />
+    <material name="pip_material" rgba="0.74901960784313725839 0.74901960784313725839 0.74901960784313725839 1.0" />
+    <material name="default_material" rgba="0.7 0.7 0.7 1" />
+    <material name="collision_material" rgba="1.0 0.28 0.1 0.9" />
+    <mesh name="palm_lower_left.stl" file="../meshes/palm_lower_left.stl" />
+    <mesh name="mcp_joint.stl" file="../meshes/mcp_joint.stl" />
+    <mesh name="pip.stl" file="../meshes/pip.stl" />
+    <mesh name="dip.stl" file="../meshes/dip.stl" />
+    <mesh name="fingertip.stl" file="../meshes/fingertip.stl" />
+  </asset>
+
+  <worldbody>
+    <body name="base_link" pos="0.00000000 0.00000000 0.00060601" quat="1 0 0 0" childclass="robot">
+      <freejoint name="floating_base" />
+      <geom name="base_link_collision" pos="-0.095574224938392599027 -0.11704001150113751972 0.02077960705260517571" quat="8.283440321537018e-16 8.283440321536224e-16 0.7071067811865476 0.7071067811865475" type="mesh" mesh="palm_lower_left.stl" class="collision" />
+      <geom name="base_link_visual" pos="-0.095574224938392599027 -0.11704001150113751972 0.02077960705260517571" quat="8.283440321537018e-16 8.283440321536224e-16 0.7071067811865476 0.7071067811865475" material="base_link_material" type="mesh" mesh="palm_lower_left.stl" class="visual" />
+      <body name="mcp_joint" pos="-0.082574224938392518092 -0.085740011501137525229 0.0078008885838987494094" quat="0.4999999999999995 0.5000000000000006 0.49999999999999944 -0.5000000000000004">
+        <joint name="1" type="hinge" ref="0.0" class="motor" range="-0.314 2.23" axis="0 0 -1" />
+        <inertial pos="0 0 0" quat="1.0 0.0 0.0 0.0" mass="0.044" diaginertia="1.1499e-05 7.796e-06 1.4759e-05" />
+        <geom name="mcp_joint_collision" pos="0.008406902261174501248 0.0077662438597169980437 0.014657354985032899908" quat="1.0 8.1878948066105e-16 -5.0228252949621625e-31 -8.149264946600145e-45" type="mesh" mesh="mcp_joint.stl" class="collision" />
+        <geom name="mcp_joint_visual" pos="0.008406902261174501248 0.0077662438597169980437 0.014657354985032899908" quat="1.0 8.1878948066105e-16 -5.0228252949621625e-31 -8.149264946600145e-45" material="mcp_joint_material" type="mesh" mesh="mcp_joint.stl" class="visual" />
+        <body name="pip" pos="-0.012200000000000005979 0.038100000000000001921 0.014499999999999985123" quat="0.4999999999999993 -0.5000000000000008 -0.4999999999999993 0.5000000000000006">
+          <joint name="0" type="hinge" ref="0.0" class="motor" range="-1.047 1.047" axis="0 0 -1" />
+          <inertial pos="0 0 0" quat="1.0 0.0 0.0 0.0" mass="0.032" diaginertia="4.798e-06 2.862e-06 4.234e-06" />
+          <geom name="pip_collision" pos="0.0096433630922713314826 0.00029999999999999471534 0.00078403401041737472155" quat="0.5000000000000001 -0.5 -0.5 -0.4999999999999999" type="mesh" mesh="pip.stl" class="collision" />
+          <geom name="pip_visual" pos="0.0096433630922713314826 0.00029999999999999471534 0.00078403401041737472155" quat="0.5000000000000001 -0.5 -0.5 -0.4999999999999999" material="pip_material" type="mesh" mesh="pip.stl" class="visual" />
+          <body name="dip" pos="0.014999999999999961281 0.014299999999999993272 -0.013000000000000025424" quat="0.5000000000000002 0.49999999999999983 -0.5000000000000001 0.4999999999999998">
+            <joint name="2" type="hinge" ref="0.0" class="motor" range="-0.506 1.885" axis="0 0 -1" />
+            <inertial pos="0 0 0" quat="1.0 0.0 0.0 0.0" mass="0.037" diaginertia="5.542e-06 5.727e-06 6.682e-06" />
+            <geom name="dip_collision" pos="0.021133352895225002849 -0.0084321191467048722812 0.0097850881620952234741" quat="6.123233995736766e-17 -1.0 -2.21977405269618e-32 2.2537555621082204e-32" type="mesh" mesh="dip.stl" class="collision" />
+            <geom name="dip_visual" pos="0.021133352895225002849 -0.0084321191467048722812 0.0097850881620952234741" quat="6.123233995736766e-17 -1.0 -2.21977405269618e-32 2.2537555621082204e-32" material="mcp_joint_material" type="mesh" mesh="dip.stl" class="visual" />
+            <body name="fingertip" pos="-4.0880582469551840497e-09 -0.03610000421036734658 0.0002000000000000612399" quat="1.0 2.2967514712556843e-17 -1.4365035957231897e-16 2.549703227390312e-32">
+              <joint name="3" type="hinge" ref="0.0" class="motor" range="-0.366 2.042" axis="0 0 -1" />
+              <inertial pos="0 0 0" quat="1.0 0.0 0.0 0.0" mass="0.016" diaginertia="3.368e-06 1.556e-06 2.863e-06" />
+              <geom name="fingertip_collision" pos="0.013286424108533503169 -0.00611423838654200167 0.014499999999999513278" quat="6.123233995736766e-17 1.0 2.2197740526961804e-32 -5.996558985030854e-34" type="mesh" mesh="fingertip.stl" class="collision" />
+              <geom name="fingertip_visual" pos="0.013286424108533503169 -0.00611423838654200167 0.014499999999999513278" quat="6.123233995736766e-17 1.0 2.2197740526961804e-32 -5.996558985030854e-34" material="mcp_joint_material" type="mesh" mesh="fingertip.stl" class="visual" />
+              <body name="fingertip_end" pos="0.0 -0.042 0.0" quat="0.7071408370313327 0.0 0.0 0.7070727237014777" />
+            </body>
+          </body>
+        </body>
+      </body>
+      <site name="base_link_site" pos="0 0 0" quat="1 0 0 0" />
+      <camera name="front_camera" mode="track" fovy="90.0" quat="4.329780281177467e-17 4.329780281177466e-17 0.7071067811865475 0.7071067811865476" pos="0.0 2.0 0.5" />
+      <camera name="side_camera" mode="track" fovy="90.0" quat="-0.5 -0.4999999999999999 0.5 0.5000000000000001" pos="-2.0 0.0 0.5" />
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="1_ctrl" joint="1" class="motor" />
+    <motor name="0_ctrl" joint="0" class="motor" />
+    <motor name="2_ctrl" joint="2" class="motor" />
+    <motor name="3_ctrl" joint="3" class="motor" />
+  </actuator>
+
+  <contact>
+    <exclude body1="mcp_joint" body2="pip" />
+    <exclude body1="base_link" body2="mcp_joint" />
+    <exclude body1="pip" body2="dip" />
+    <exclude body1="dip" body2="fingertip" />
+  </contact>
+
+  <sensor>
+    <framepos name="base_link_site_pos" objtype="site" objname="base_link_site" />
+    <framequat name="base_link_site_quat" objtype="site" objname="base_link_site" />
+    <framelinvel name="base_link_site_linvel" objtype="site" objname="base_link_site" />
+    <frameangvel name="base_link_site_angvel" objtype="site" objname="base_link_site" />
+    <velocimeter name="base_link_site_vel" site="base_link_site" />
+  </sensor>
+</mujoco>
