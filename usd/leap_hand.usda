@@ -1,0 +1,278 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary cameraSettings = {
+            dictionary Front = {
+                double3 position = (5, 0, 0)
+                double radius = 5
+            }
+            dictionary Perspective = {
+                double3 position = (0.3617887458193261, 0.3194076815398634, 0.45919082630402436)
+                double3 target = (-0.08690080262174521, -0.13275436011512676, 0.11355339638478207)
+            }
+            dictionary Right = {
+                double3 position = (0, -5, 0)
+                double radius = 5
+            }
+            dictionary Top = {
+                double3 position = (0, 0, 5)
+                double radius = 5
+            }
+            string boundCamera = "/OmniverseKit_Persp"
+        }
+        dictionary omni_layer = {
+            string authoring_layer = "./leap_hand.usda"
+            dictionary locked = {
+            }
+            dictionary muteness = {
+            }
+        }
+        dictionary renderSettings = {
+        }
+    }
+    defaultPrim = "World"
+    endTimeCode = 1000000
+    metersPerUnit = 1
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def "leap_hand" (
+        prepend apiSchemas = ["PhysicsArticulationRootAPI", "PhysxArticulationAPI"]
+        prepend references = @./leap_hand.usd@
+    )
+    {
+        bool physxArticulation:enabledSelfCollisions = 0
+        quatd xformOp:orient = (0.7071067690849304, 0, 0.7071067690849304, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0.20000000298023224)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        over "dumay_link"
+        {
+            over "dumay_link_2"
+            {
+                over "base_link"
+                {
+                    def Xform "target_frame"
+                    {
+                        quatd xformOp:orient = (1, 0, 0, 0)
+                        double3 xformOp:scale = (1, 1, 1)
+                        double3 xformOp:translate = (0.06611085928670636, 0.1632936510261406, 0.05175490976988428)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                    }
+                }
+            }
+        }
+
+        over "mcp_joint"
+        {
+        }
+
+        over "pip"
+        {
+        }
+
+        over "dip"
+        {
+        }
+
+        over "fingertip"
+        {
+        }
+
+        over "joints"
+        {
+            over "joint_1"
+            {
+                float state:angular:physics:position = 0
+                float state:angular:physics:velocity = 0
+            }
+
+            over "joint_0"
+            {
+                float state:angular:physics:position = 0
+                float state:angular:physics:velocity = 0
+            }
+
+            over "joint_2"
+            {
+                float state:angular:physics:position = 0
+                float state:angular:physics:velocity = 0
+            }
+
+            over "joint_3"
+            {
+                float state:angular:physics:position = 0
+                float state:angular:physics:velocity = 0
+            }
+        }
+
+        over "root_joint" (
+            delete apiSchemas = ["PhysicsArticulationRootAPI", "PhysxArticulationAPI"]
+        )
+        {
+            point3f physics:localPos0 = (0, 0, 0)
+            point3f physics:localPos1 = (0, 0, -0.1254375)
+            quatf physics:localRot0 = (1, 0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
+        }
+    }
+
+    def OmniGraph "ActionGraph"
+    {
+        token evaluationMode = "Automatic"
+        token evaluator:type = "execution"
+        token fabricCacheBacking = "Shared"
+        int2 fileFormatVersion = (1, 9)
+        token pipelineStage = "pipelineStageSimulation"
+
+        def OmniGraphNode "on_playback_tick" (
+            prepend apiSchemas = ["NodeGraphNodeAPI"]
+        )
+        {
+            token node:type = "omni.graph.action.OnPlaybackTick"
+            int node:typeVersion = 2
+            custom double outputs:deltaSeconds
+            custom double outputs:frame
+            custom uint outputs:tick (
+                customData = {
+                    bool isExecution = 1
+                }
+            )
+            custom double outputs:time
+            uniform token ui:nodegraph:node:expansionState = "open"
+            uniform float2 ui:nodegraph:node:pos = (184.96309, 128.34805)
+        }
+
+        def OmniGraphNode "articulation_controller" (
+            prepend apiSchemas = ["NodeGraphNodeAPI"]
+        )
+        {
+            custom double[] inputs:effortCommand
+            custom uint inputs:execIn (
+                customData = {
+                    bool isExecution = 1
+                }
+            )
+            prepend uint inputs:execIn.connect = </World/ActionGraph/on_playback_tick.outputs:tick>
+            custom int[] inputs:jointIndices
+            prepend int[] inputs:jointIndices.connect = </World/ActionGraph/script_node.outputs:jointIndices>
+            custom token[] inputs:jointNames
+            custom double[] inputs:positionCommand
+            prepend double[] inputs:positionCommand.connect = </World/ActionGraph/script_node.outputs:positionCommand>
+            custom string inputs:robotPath
+            prepend string inputs:robotPath.connect = </World/ActionGraph/script_node.outputs:robotPath>
+            custom rel inputs:targetPrim = </World/leap_hand> (
+                customData = {
+                    dictionary omni = {
+                        dictionary graph = {
+                            string relType = "target"
+                        }
+                    }
+                }
+            )
+            custom double[] inputs:velocityCommand
+            token node:type = "isaacsim.core.nodes.IsaacArticulationController"
+            int node:typeVersion = 1
+            uniform token ui:nodegraph:node:expansionState = "open"
+            uniform float2 ui:nodegraph:node:pos = (984.20825, 182.96313)
+        }
+
+        def OmniGraphNode "script_node" (
+            prepend apiSchemas = ["NodeGraphNodeAPI"]
+        )
+        {
+            custom uint inputs:execIn (
+                customData = {
+                    bool isExecution = 1
+                }
+            )
+            prepend uint inputs:execIn.connect = </World/ActionGraph/on_playback_tick.outputs:tick>
+            custom rel inputs:robotPrim = </World/leap_hand> (
+                customData = {
+                    dictionary omni = {
+                        dictionary graph = {
+                            string relType = "target"
+                        }
+                    }
+                }
+            )
+            custom string inputs:script = """/World/leap_hand/dumay_link/dumay_link_2/base_link/Xformv
+"""
+            custom token inputs:scriptPath = "../action_graph_script.py"
+            custom bool inputs:usePath = 1
+            token node:type = "omni.graph.scriptnode.ScriptNode"
+            int node:typeVersion = 2
+            custom uint outputs:execOut (
+                customData = {
+                    bool isExecution = 1
+                }
+            )
+            custom int[] outputs:jointIndices
+            custom double[] outputs:positionCommand
+            custom string outputs:robotPath
+            custom bool state:omni_initialized
+            uniform token ui:nodegraph:node:expansionState = "open"
+            uniform float2 ui:nodegraph:node:pos = (579.7015, 265.1556)
+        }
+    }
+}
+
+def Xform "Environment"
+{
+    quatd xformOp:orient = (1, 0, 0, 0)
+    double3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+    def DistantLight "defaultLight" (
+        prepend apiSchemas = ["ShapingAPI"]
+    )
+    {
+        float inputs:angle = 1
+        float inputs:intensity = 3000
+        float inputs:shaping:cone:angle = 180
+        float inputs:shaping:cone:softness
+        float inputs:shaping:focus
+        color3f inputs:shaping:focusTint
+        asset inputs:shaping:ies:file
+        quatd xformOp:orient = (0.6532814824381883, 0.2705980500730985, 0.27059805007309845, 0.6532814824381882)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Xform "GroundPlane"
+    {
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def Mesh "CollisionMesh"
+        {
+            uniform bool doubleSided = 0
+            int[] faceVertexCounts = [4]
+            int[] faceVertexIndices = [0, 1, 2, 3]
+            normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)]
+            point3f[] points = [(-25, -25, 0), (25, -25, 0), (25, 25, 0), (-25, 25, 0)]
+            color3f[] primvars:displayColor = [(0.5, 0.5, 0.5)]
+            texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1)] (
+                interpolation = "varying"
+            )
+        }
+
+        def Plane "CollisionPlane" (
+            prepend apiSchemas = ["PhysicsCollisionAPI"]
+        )
+        {
+            uniform token axis = "Z"
+            uniform token purpose = "guide"
+        }
+    }
+}
+

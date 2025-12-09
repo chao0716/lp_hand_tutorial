@@ -125,8 +125,6 @@ def main(urdf_path, xml_path):
     with mujoco.viewer.launch_passive(model, data) as viewer:
         # Main simulation loop: runs until the viewer window is closed
         while viewer.is_running():
-            step_start = time.time()
-
             # First loop: copy initial positions
             if updated_position is None:
                 updated_position = initial_position.copy()
