@@ -7,8 +7,8 @@
                 double radius = 5
             }
             dictionary Perspective = {
-                double3 position = (0.3617887458193261, 0.3194076815398634, 0.45919082630402436)
-                double3 target = (-0.08690080262174521, -0.13275436011512676, 0.11355339638478207)
+                double3 position = (0.7570393471257383, 0.3962855853116436, 0.5666146798321188)
+                double3 target = (0.22587093583791984, -0.05552703526884489, 0.23929859180988816)
             }
             dictionary Right = {
                 double3 position = (0, -5, 0)
@@ -46,9 +46,9 @@ def Xform "World"
     )
     {
         bool physxArticulation:enabledSelfCollisions = 0
-        quatd xformOp:orient = (0.7071067690849304, 0, 0.7071067690849304, 0)
+        quatd xformOp:orient = (1, 0, 0, 0)
         double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 0, 0.20000000298023224)
+        double3 xformOp:translate = (0, 0, 0)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
 
         over "dumay_link"
@@ -119,6 +119,27 @@ def Xform "World"
             point3f physics:localPos1 = (0, 0, -0.1254375)
             quatf physics:localRot0 = (1, 0, 0, 0)
             quatf physics:localRot1 = (1, 0, 0, 0)
+        }
+
+        over "arm_tool_link"
+        {
+            over "dummy_link"
+            {
+                over "dummy_link_2"
+                {
+                    over "base_link"
+                    {
+                    }
+                }
+            }
+
+            def Xform "target_frame"
+            {
+                quatd xformOp:orient = (1, 0, 0, 0)
+                double3 xformOp:scale = (1, 1, 1)
+                double3 xformOp:translate = (0.16653222951279273, 0.02373606161280947, -0.025806787773032247)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
         }
     }
 
@@ -201,9 +222,8 @@ def Xform "World"
                     }
                 }
             )
-            custom string inputs:script = """/World/leap_hand/dumay_link/dumay_link_2/base_link/Xformv
-"""
-            custom token inputs:scriptPath = "../action_graph_script.py"
+            custom string inputs:script = ""
+            custom token inputs:scriptPath = "../scripts/action_graph_script.py"
             custom bool inputs:usePath = 1
             token node:type = "omni.graph.scriptnode.ScriptNode"
             int node:typeVersion = 2
@@ -250,7 +270,7 @@ def Xform "Environment"
     {
         quatf xformOp:orient = (1, 0, 0, 0)
         float3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 0, 0)
+        double3 xformOp:translate = (0, 0, -0.0531411571018335)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
 
         def Mesh "CollisionMesh"

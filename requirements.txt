@@ -1,3 +1,2 @@
 urdf2mjcf==0.2.39
 mujoco
-ikpy

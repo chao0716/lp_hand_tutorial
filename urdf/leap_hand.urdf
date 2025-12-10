@@ -1,6 +1,8 @@
 <robot name="leap_hand">
 
-    <link name="dumay_link">
+    <link name="arm_tool_link" />
+
+    <link name="dummy_link">
         <visual>
             <origin xyz="-0.006 -0.0461 0.033" rpy="3.14 0 1.5708" />
             <geometry>
@@ -11,7 +13,7 @@
             </material>
         </visual>
         <collision>
-            <origin xyz="0 0 0" rpy="0 0 0" />
+            <origin xyz="-0.006 -0.0461 0.033" rpy="3.14 0 1.5708" />
             <geometry>
                 <mesh filename="../meshes/base_link.stl"/>
             </geometry>
@@ -23,7 +25,13 @@
         </inertial>
     </link>
 
-    <link name="dumay_link_2">
+    <joint name="arm_tool_joint" type="fixed">
+        <origin xyz="0.092 -0.071 0.002" rpy="0 -1.5708 -1.5708" />
+        <parent link="arm_tool_link" />
+        <child link="dummy_link" />
+    </joint>
+
+    <link name="dummy_link_2">
         <visual>
             <origin xyz="-0.095574224938392599027 -0.11704001150113751972 0.02077960705260517571" rpy="1.57079632679489678 1.1239611599647231752e-28 3.1415926535897908956" />
             <geometry>
@@ -46,19 +54,18 @@
         </inertial>
     </link>
 
-
     <joint name="dummy_joint" type="fixed">
         <origin xyz="-0.012200000000000005979 0.038100000000000001921 0.014499999999999985123" rpy="-1.57079632679489678 2.8029314871654157891e-15 1.570796326794896336" />
-        <parent link="dumay_link" />
-        <child link="dumay_link_2" />
+        <parent link="dummy_link" />
+        <child link="dummy_link_2" />
     </joint>
 
-    <link name="base_link" />
+    <link name="dummy_link_3" />
 
     <joint name="dummy_joint_2" type="fixed">
         <origin xyz="-0.13 -0.057 -0.01" rpy="0 0 -1.57" />
-        <parent link="dumay_link_2" />
-        <child link="base_link" />
+        <parent link="dummy_link_2" />
+        <child link="dummy_link_3" />
     </joint>
 
     <link name="mcp_joint">
@@ -167,7 +174,7 @@
 
     <joint name="joint_1" type="revolute">
         <origin xyz="0.02874 0.04743 0.01780" rpy="1.571 1.571 1.570" />
-        <parent link="base_link" />
+        <parent link="dummy_link_3" />
         <child link="mcp_joint" />
         <axis xyz="0 0 -1"/>
         <limit effort="0.95" velocity="8.48" lower = "-0.314" upper = "2.23"/>
